@@ -18,6 +18,9 @@ jobs:
           - macos-10.15
     steps:
 
+      - name: checkout
+        uses: actions/checkout@v2
+
       - name: build
         shell: bash
         run: |
@@ -29,3 +32,15 @@ jobs:
           which safaridriver
           safaridriver --help || true
           sudo safaridriver --enable
+
+      - name: setup-node-15
+        if: matrix.os == 'macos-10.15'
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15.6.0
+
+      - name: test
+        if: matrix.os == 'macos-10.15'
+        run: |
+          npm install selenium-webdriver
+          node ./test.js
