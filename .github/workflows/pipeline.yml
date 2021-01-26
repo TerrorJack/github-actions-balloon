@@ -32,7 +32,7 @@ jobs:
           HOMEBREW_NO_AUTO_UPDATE=1 brew install safari-technology-preview
 
           "/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver" --help || true
-          "/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver" --enable
+          sudo "/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver" --enable
 
       - name: setup-node-15
         if: matrix.os == 'macos-10.15'
