@@ -24,7 +24,7 @@ jobs:
           printenv | sort
 
       - name: safaridriver
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-10.15'
         run: |
           which safaridriver
           safaridriver --help
