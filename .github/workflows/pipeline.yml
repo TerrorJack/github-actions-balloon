@@ -29,7 +29,13 @@ jobs:
       - name: safaridriver
         if: matrix.os == 'macos-10.15'
         run: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew cask install safari-technology-preview
+          export HOMEBREW_NO_AUTO_UPDATE=1
+
+          brew tap homebrew/cask-versions
+          brew install safari-technology-preview
+
+          echo $(brew --prefix)
+          ls $(brew --prefix)
 
           which safaridriver
           safaridriver --help || true
