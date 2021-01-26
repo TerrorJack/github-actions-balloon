@@ -1,0 +1,25 @@
+name: pipeline
+
+on:
+  - push
+  - pull_request
+
+jobs:
+
+  build:
+    name: build-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-20.04
+          - windows-2019
+          - macos-11.0
+          - macos-10.15
+    steps:
+
+      - name: build
+        shell: bash
+        run: |
+          printenv | sort
