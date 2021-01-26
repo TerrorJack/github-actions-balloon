@@ -44,3 +44,10 @@ jobs:
         run: |
           npm install selenium-webdriver
           node ./test.js
+
+      - name: upload-artifact
+        if: matrix.os == 'macos-10.15'
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshot
+          path: screenshot.png
