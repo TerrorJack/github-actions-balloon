@@ -4,7 +4,10 @@ const { Driver, Options } = require("selenium-webdriver/safari");
 const util = require("util");
 
 (async () => {
-  const driver = Driver.createSession(new Options().setTechnologyPreview(true));
+  const options = new Options()
+    .setTechnologyPreview(true)
+    .setBrowserName("Safari Technology Preview");
+  const driver = Driver.createSession(options);
   await driver.get("https://wasm-feature-detect.surma.technology");
   fs.writeFileSync(
     "screenshot.png",
