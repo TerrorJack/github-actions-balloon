@@ -29,7 +29,10 @@ jobs:
       - name: safaridriver
         if: matrix.os == 'macos-10.15'
         run: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install https://raw.githubusercontent.com/Homebrew/homebrew-cask-versions/a64ab24887b0490d67add0fbdf95b58b72fc79a6/Casks/safari-technology-preview.rb
+          pushd $(mktemp -d)
+          curl https://raw.githubusercontent.com/Homebrew/homebrew-cask-versions/a64ab24887b0490d67add0fbdf95b58b72fc79a6/Casks/safari-technology-preview.rb -O
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install safari-technology-preview.rb
+          popd
 
           mkdir -p ~/Library/WebDriver/
           cp com.apple.SafariTechnologyPreview.plist ~/Library/WebDriver
