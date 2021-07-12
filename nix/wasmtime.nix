@@ -31,7 +31,7 @@ self: _: {
           [ darwin.apple_sdk.frameworks.Security ];
         LIBCLANG_PATH = "${llvmPackages.libclang.lib}/lib";
 
-        doCheck = true;
+        doCheck = false;
 
         meta = with lib; {
           description =
