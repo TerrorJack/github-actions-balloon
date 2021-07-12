@@ -13,18 +13,18 @@ self: _: {
 
       rustPlatform.buildRustPackage rec {
         pname = "wasmtime";
-        version = "0.23.0";
+        version = "0.22.1";
 
         src = fetchFromGitHub {
           owner = "bytecodealliance";
           repo = pname;
           rev = "v${version}";
-          sha256 = "sha256-5/zq8a7w0dSd9KHbXa9+5/qrZ9GQj3ryUUISpC3RyPs=";
+          sha256 = "sha256-aNKrhIpTtHTjitm/cBTgP3PHtdIXS/6xvevoNE0G16Y=";
           fetchSubmodules = true;
         };
 
         cargoHash =
-          "sha512-iojZ4H37I+T0LmU2LcEn4euA+H82VKxP5IcEwiwyFokste2a96o5b8IZdloQuwNmWwOpvcYV+zjCWK0qPKmhCQ==";
+          "sha512-KkGw8bkU4Nm6aeaJAfcVB14xn2csw58Iw/UM+GYp7OeAcI/aY4sSH8Elm0R4rsxb2WTcgu1Nl/EK0u5I+/6/4w==";
 
         nativeBuildInputs = [ python cmake clang ];
         buildInputs = [ llvmPackages.libclang ] ++ lib.optionals stdenv.isDarwin
