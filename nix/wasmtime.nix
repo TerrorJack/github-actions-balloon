@@ -26,9 +26,7 @@ self: _: {
         }.${stdenv.hostPlatform.system};
         phases =
           [ "unpackPhase" "buildPhase" "installPhase" "installCheckPhase" ];
-        buildPhase = ''
-          otool -L wasmtime
-          ./wasmtime --version
+        buildPhase = lib.optionalString stdenv.isLinux ''
           patchelf \
             --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
             --set-rpath ${lib.makeLibraryPath [ stdenv.cc.libc ]} \
