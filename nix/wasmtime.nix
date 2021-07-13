@@ -36,6 +36,7 @@ self: _: {
           mkdir -p $out/bin
           mv wasmtime $out/bin
         '';
+        doInstallCheck = true;
         installCheckPhase = ''
           $out/bin/wasmtime --version
         '';
