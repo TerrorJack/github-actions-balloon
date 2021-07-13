@@ -27,6 +27,7 @@ self: _: {
         phases =
           [ "unpackPhase" "buildPhase" "installPhase" "installCheckPhase" ];
         buildPhase = ''
+          ldd wasmtime
           patchelf \
             --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
             --set-rpath ${lib.makeLibraryPath [ stdenv.cc.libc ]} \
