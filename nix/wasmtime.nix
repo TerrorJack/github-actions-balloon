@@ -1,46 +1,44 @@
 self: _: {
   wasmtime = self.callPackage
-    ({ rustPlatform
-     , fetchFromGitHub
-     , lib
-     , python
-     , cmake
-     , llvmPackages
-     , clang
-     , stdenv
-     , darwin
-     }:
-
-      rustPlatform.buildRustPackage rec {
-        pname = "wasmtime";
-        version = "0.22.1";
-
-        src = fetchFromGitHub {
-          owner = "bytecodealliance";
-          repo = pname;
-          rev = "v${version}";
-          sha256 = "sha256-aNKrhIpTtHTjitm/cBTgP3PHtdIXS/6xvevoNE0G16Y=";
-          fetchSubmodules = true;
-        };
-
-        cargoHash =
-          "sha512-KkGw8bkU4Nm6aeaJAfcVB14xn2csw58Iw/UM+GYp7OeAcI/aY4sSH8Elm0R4rsxb2WTcgu1Nl/EK0u5I+/6/4w==";
-
-        nativeBuildInputs = [ python cmake clang ];
-        buildInputs = [ llvmPackages.libclang ] ++ lib.optionals stdenv.isDarwin
-          [ darwin.apple_sdk.frameworks.Security ];
-        LIBCLANG_PATH = "${llvmPackages.libclang.lib}/lib";
-
-        doCheck = false;
-
-        meta = with lib; {
-          description =
-            "Standalone JIT-style runtime for WebAssembly, using Cranelift";
-          homepage = "https://github.com/bytecodealliance/wasmtime";
-          license = licenses.asl20;
-          maintainers = [ maintainers.matthewbauer ];
-          platforms = platforms.unix;
-        };
+    ({ fetchzip, lib, stdenv }:
+      stdenv.mkDerivation rec {
+        name = "wasmtime";
+        version = "0.28.0";
+        src = fetchzip {
+          x86_64-linux = {
+            url =
+              "https://github.com/bytecodealliance/wasmtime/releases/download/v${version}/wasmtime-v${version}-x86_64-linux.tar.xz";
+            hash =
+              "sha512-2431CxxPPrB7x5VbrpG2daRMcqubMQxmLg9yqiiTrIRYFecS/KbGbBDam0vR1+yOFYNSooaU8sKn1+FjkukeuQ==";
+          };
+          aarch64-linux = {
+            url =
+              "https://github.com/bytecodealliance/wasmtime/releases/download/v${version}/wasmtime-v${version}-aarch64-linux.tar.xz";
+            hash =
+              "sha512-zebIwLyq9gg6tct9sGtbu7Yil//o9q8sXHr48HARdT00bOo8D1kF0QlM8HURsWO52fq26X7n9ZbC29fD6jqO8w==";
+          };
+          x86_64-darwin = {
+            url =
+              "https://github.com/bytecodealliance/wasmtime/releases/download/v${version}/wasmtime-v${version}-x86_64-macos.tar.xz";
+            hash =
+              "sha512-NPpGMPsDBqL7EGnNHRg+ZLA3ZEc3UKgPLrSONPqUhM3jG5aPR1h1Eqdt3eb2ud83onLE8pDgHR3r2QVbiHNDgQ==";
+          };
+        }.${stdenv.hostPlatform.system};
+        phases =
+          [ "unpackPhase" "buildPhase" "installPhase" "installCheckPhase" ];
+        buildPhase = ''
+          patchelf \
+            --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
+            --set-rpath ${lib.makeLibraryPath [ stdenv.cc.libc ]} \
+            wasmtime
+        '';
+        installPhase = ''
+          mkdir -p $out/bin
+          mv wasmtime $out/bin
+        '';
+        installCheckPhase = ''
+          $out/bin/wasmtime --version
+        '';
       })
     { };
 }
